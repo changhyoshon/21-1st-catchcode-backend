@@ -11,19 +11,18 @@ class OrderStatus(models.Model):
 
 class Order(models.Model):
     payment_date = models.DateTimeField(auto_now_add=True)
-    status       = models.ForeignKey(OrderStatus, on_delete=models.DO_NOTHING)
-    order        = models.ManyToManyField(User, through='OrderItem')
+    status       = models.ForeignKey(OrderStatus, null=True, on_delete=models.SET_NULL)
+    user         = models.ForeignKey(User, on_delete=models.DO_NOTHING)
 
     class Meta:
         db_table = 'orders'
 
 class OrderItem(models.Model):
-    user        = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    order       = models.ForeignKey(Order, on_delete=models.DO_NOTHING)
+    order       = models.ForeignKey(Order, on_delete=models.CASCADE)
     quantity    = models.IntegerField()
     total_price = models.DecimalField(max_digits=18, decimal_places=2)
-    size        = models.ForeignKey(Size, on_delete=models.DO_NOTHING)
-    product     = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
+    size        = models.ForeignKey(Size, null=True, on_delete=models.SET_NULL)
+    product     = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         db_table = 'order_items'

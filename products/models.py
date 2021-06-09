@@ -1,15 +1,15 @@
 from django.db import models
 
 class Category(models.Model):
-    name      = models.CharField(max_length=100)
-    image_url = models.CharField(max_length=500)
+    name      = models.CharField(max_length=20)
+    image_url = models.CharField(max_length=200)
 
     class Meta:
         db_table = 'categories'
 
 class Country(models.Model):
-    name      = models.CharField(max_length=100)
-    image_url = models.CharField(max_length=500)
+    name      = models.CharField(max_length=20)
+    image_url = models.CharField(max_length=200)
 
     class Meta:
         db_table = 'countries'
@@ -29,8 +29,8 @@ class Content(models.Model):
 class Product(models.Model):
     name            = models.CharField(max_length=45)
     description     = models.TextField()
-    category        = models.ForeignKey(Category, on_delete=models.DO_NOTHING)
-    country         = models.ForeignKey(Country, on_delete=models.DO_NOTHING)
+    category        = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
+    country         = models.ForeignKey(Country, null=True, on_delete=models.SET_NULL)
     color           = models.CharField(max_length=45)
     catch_code      = models.IntegerField()
     created_at      = models.DateTimeField(auto_now_add=True)
@@ -41,25 +41,25 @@ class Product(models.Model):
         db_table = 'products'
 
 class ProductSize(models.Model):
-    size    = models.ForeignKey(Size, on_delete=models.DO_NOTHING)
-    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
+    size    = models.ForeignKey(Size, null=True, on_delete=models.SET_NULL)
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)
     stock   = models.IntegerField()
     price   = models.DecimalField(max_digits=18, decimal_places=2)
     
     class Meta:
-        db_table = 'products_sizes'
+        db_table = 'product_sizes'
 
 class ProductContent(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
-    content = models.ForeignKey(Content, on_delete=models.DO_NOTHING)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    content = models.ForeignKey(Content, null=True, on_delete=models.SET_NULL)
     percent = models.DecimalField(max_digits=4, decimal_places=1)
 
     class Meta:
-        db_table = 'products_contents'
+        db_table = 'product_contents'
 
 class Image(models.Model):
-    product   = models.ForeignKey(Product, on_delete=models.CASCADE)
-    image_url = models.CharField(max_length=500)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    url     = models.CharField(max_length=500)
 
     class Meta:
         db_table = 'images'
