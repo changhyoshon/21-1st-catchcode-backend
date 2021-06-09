@@ -15,7 +15,7 @@ class Country(models.Model):
         db_table = 'countries'
 
 class Size(models.Model):
-    size = models.CharField(max_length=10)
+    name = models.CharField(max_length=10)
 
     class Meta:
         db_table = 'sizes'
@@ -34,6 +34,7 @@ class Product(models.Model):
     color           = models.CharField(max_length=45)
     catch_code      = models.IntegerField()
     created_at      = models.DateTimeField(auto_now_add=True)
+    updated_at      = models.DateTimeField(auto_now=True)
     product_size    = models.ManyToManyField(Size, through='ProductSize')
     product_content = models.ManyToManyField(Content, through='ProductContent')
 

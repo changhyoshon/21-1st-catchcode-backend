@@ -10,9 +10,10 @@ class OrderStatus(models.Model):
         db_table = 'order_status'
 
 class Order(models.Model):
-    payment_date = models.DateTimeField(auto_now_add=True)
-    status       = models.ForeignKey(OrderStatus, null=True, on_delete=models.SET_NULL)
-    user         = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    status     = models.ForeignKey(OrderStatus, null=True, on_delete=models.SET_NULL)
+    user       = models.ForeignKey(User, on_delete=models.DO_NOTHING)
 
     class Meta:
         db_table = 'orders'

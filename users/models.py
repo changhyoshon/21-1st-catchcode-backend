@@ -7,7 +7,8 @@ class User(models.Model):
     sex          = models.IntegerField()
     admin        = models.IntegerField(default=0)
     created_at   = models.DateTimeField(auto_now_add=True)
-    deleted_at   = models.DateTimeField(null=True)
+    updated_at   = models.DateTimeField(auto_now=True)
+    is_delete    = models.BooleanField(null=True)
 
     class Meta:
         db_table = 'users'
