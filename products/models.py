@@ -2,14 +2,14 @@ from django.db import models
 
 class Category(models.Model):
     name      = models.CharField(max_length=20)
-    image_url = models.CharField(max_length=200)
+    image_url = models.URLField(max_length=200)
 
     class Meta:
         db_table = 'categories'
 
 class Country(models.Model):
     name      = models.CharField(max_length=20)
-    image_url = models.CharField(max_length=200)
+    image_url = models.URLField(max_length=200)
 
     class Meta:
         db_table = 'countries'
@@ -59,7 +59,7 @@ class ProductContent(models.Model):
 
 class Image(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    url     = models.CharField(max_length=500)
+    url     = models.URLField(max_length=200)
 
     class Meta:
         db_table = 'images'
