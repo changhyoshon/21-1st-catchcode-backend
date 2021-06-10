@@ -9,7 +9,6 @@ def LoginStatus(func):
     def wrapper(self, request, *args, **kwargs):
         try:
             token = request.headers.get('Authorization', None)
-            
             if token:
                 token        = token.split(' ')[1]
                 payload      = jwt.decode(token, SECRET_KEY, ALGORITHM)
@@ -28,9 +27,4 @@ def LoginStatus(func):
             return JsonResponse({'result' : 'INVALID USER'}, status=401)
 
         return func(self, request, *args, **kwargs)
-
     return wrapper
-
-
-
-

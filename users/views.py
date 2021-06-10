@@ -9,7 +9,7 @@ from users.models import User
 from my_settings  import ALGORITHM, SECRET_KEY
 
 class SignupView(View):
-    @LoginStatus
+
     def post(self, request):
         try:
             data         = json.loads(request.body)
@@ -52,7 +52,7 @@ class SigninView(View):
             data         = json.loads(request.body)
             phone_number = data['phone_number']
             password     = data['password']
-
+        
             if not User.objects.filter(phone_number=phone_number).exists():
                 return JsonResponse({'result' : 'INVALID USER'}, status=401)
 
@@ -61,7 +61,7 @@ class SigninView(View):
             if not bcrypt.checkpw(password.encode('utf-8'), user_data.password.encode('utf-8')):
                 return JsonResponse({'result' : 'INVALID PASSWORD'}, status=401)
 
-            token=jwt.encode({'phone_number' : phone_number}, SECRET_KEY, ALGORITHM)
+            token=jwt.encode({'name' : user_data.name}, SECRET_KEY, ALGORITHM)
             
             return JsonResponse({'result' : 'SUCCESS!', 'token' : token}, status=201)
 
