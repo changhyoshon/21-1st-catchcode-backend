@@ -1,22 +1,18 @@
-from users.utils import LoginStatus
-from django.shortcuts import render
+from users.utils      import LoginStatus
 
-# Create your views here.
 import json, re, bcrypt, jwt
 
-from django.db.models.fields.json import DataContains
-
-from django.http import JsonResponse
-from django.views import View
-from django.db.models import Q
+from django.http      import JsonResponse
+from django.views     import View
 
 from users.models import User
-from my_settings import ALGORITHM, SECRET_KEY
+from my_settings  import ALGORITHM, SECRET_KEY
 
 class SignupView(View):
+    @LoginStatus
     def post(self, request):
         try:
-            data = json.loads(request.body)
+            data         = json.loads(request.body)
             phone_number = data['phone_number']
             name         = data['name']
             password     = data['password']
@@ -36,7 +32,7 @@ class SignupView(View):
             if User.objects.filter(phone_number=phone_number).exists():
                 return JsonResponse({'result' : 'PHONE NUMBER ALREADY EXISTS'})
 
-            hashed_password=bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
             User.objects.create(
                 phone_number = phone_number,
