@@ -10,9 +10,8 @@ def LoginStatus(func):
         try:
             token = request.headers.get('Authorization', None)
             if token:
-                token        = token.split(' ')[1]
                 payload      = jwt.decode(token, SECRET_KEY, ALGORITHM)
-                user         = User.objects.get(phone_number = payload['phone_number'])
+                user         = User.objects.get(id = payload['id'])
                 request.user = user
             else:
                 return JsonResponse({'result':'PLEASE LOGIN'}, status=401)

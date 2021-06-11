@@ -9,7 +9,7 @@ from users.models import User
 from my_settings  import ALGORITHM, SECRET_KEY
 
 class SignupView(View):
-
+    
     def post(self, request):
         try:
             data         = json.loads(request.body)
@@ -47,6 +47,7 @@ class SignupView(View):
             return JsonResponse({'result' : 'KEY_ERROR'}, status=400)
 
 class SigninView(View):
+    @LoginStatus
     def post(self, request):
         try:
             data         = json.loads(request.body)
@@ -61,7 +62,7 @@ class SigninView(View):
             if not bcrypt.checkpw(password.encode('utf-8'), user_data.password.encode('utf-8')):
                 return JsonResponse({'result' : 'INVALID PASSWORD'}, status=401)
 
-            token=jwt.encode({'name' : user_data.name}, SECRET_KEY, ALGORITHM)
+            token=jwt.encode({'id' : user_data.id}, SECRET_KEY, ALGORITHM)
             
             return JsonResponse({'result' : 'SUCCESS!', 'token' : token}, status=201)
 
