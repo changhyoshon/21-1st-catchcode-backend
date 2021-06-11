@@ -1,15 +1,13 @@
-from users.utils      import LoginStatus
-
 import json, re, bcrypt, jwt
 
 from django.http      import JsonResponse
 from django.views     import View
 
 from users.models import User
+from users.utils  import LoginStatus
 from my_settings  import ALGORITHM, SECRET_KEY
 
 class SignupView(View):
-    
     def post(self, request):
         try:
             data         = json.loads(request.body)
@@ -47,7 +45,6 @@ class SignupView(View):
             return JsonResponse({'result' : 'KEY_ERROR'}, status=400)
 
 class SigninView(View):
-  
     def post(self, request):
         try:
             data         = json.loads(request.body)
