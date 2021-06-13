@@ -1,5 +1,4 @@
 import json
-from products.models import ProductSize
 
 from django.http      import JsonResponse
 from django.views     import View
