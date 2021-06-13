@@ -75,8 +75,8 @@ class OrdersCart(View):
             id = request.user.id
 
             obj, created = Order.objects.get_or_create(
-                user_id=id,
-                status_id=1
+                user_id   = id,
+                status_id = 1
             )
         
             if not created:
