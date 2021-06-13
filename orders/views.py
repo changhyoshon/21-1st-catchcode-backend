@@ -83,9 +83,9 @@ class OrdersCart(View):
                 Order.objects.filter(id = obj.id).update(updated_at = timezone.now())
             
             order_item = OrderItem.objects.filter(
-                order_id=obj.id,
-                size_id=datas['sizeId'],
-                product_id=datas['productId']
+                order_id   = obj.id,
+                size_id    = datas['sizeId'],
+                product_id = datas['productId']
             ) or False
         
             if not order_item:
@@ -114,6 +114,8 @@ class OrdersCart(View):
             return JsonResponse({'result' : 'SUCCESS'}, status=201)
         except KeyError:
             return JsonResponse({'result' : 'INVALID KEY'}, status=400)
+        except ProductSize.DoesNotExist:
+            return JsonResponse({'result' : 'INVALID PRODUCT'}, status=400)
         except json.decoder.JSONDecodeError:
             return JsonResponse({'result' : 'EMPTY BODY'}, status=400)
 
