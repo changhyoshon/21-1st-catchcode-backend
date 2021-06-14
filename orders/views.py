@@ -3,7 +3,6 @@ import json
 from django.http      import JsonResponse
 from django.views     import View
 from django.utils     import timezone
-from django.db.models import Sum
 
 from users.utils     import LoginStatus
 from orders.models   import Order, OrderItem
@@ -59,7 +58,7 @@ class OrdersCart(View):
                     'totalPrice'  : object.total_price,
                     'sizeId'      : object.size_id,
                     'sizeName'    : object.size.name,
-                    'stock'       : object.product.productsize_set.all().aggregate(Sum('stock'))['stock__sum'],
+                    'stock'       : object.product.productsize_set.filter(size_id = object.size_id)[0].stock,
                     'orderItemId' : object.id
                 } for object in order_items
             ]
