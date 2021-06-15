@@ -57,23 +57,23 @@ class ProductListInfo(View):
 
         q = Q()
 
-        if details == 'country':
+        if details == 'country' and number != 0:
             q.add(Q(country_id=number), q.AND)
             
-        if details == 'category':
+        if details == 'category' and number != 0:
             pattern_identifier = Category.objects.get(id=number).name
             q.add(Q(category_id=number), q.AND)
-            q.add(Q(category_id=6, name__istartswith=pattern_identifier), q.OR)
+            q.add(Q(category_id=6, name__istartswith=pattern_identifier), q.OR) 
 
         if catch:
             q.add(Q(catch_code=catch), q.AND)
 
         if color:
-            q.add(Q(color = color), q.AND)
+            q.add(Q(color=color), q.AND)
 
         q.add(Q(productsize__price__range=(price_min, price_max)), q.AND)
         q.add(Q(productsize__size_id=3), q.AND)
-          
+        
         result = [
             {
                 'id'         : product.id,
@@ -85,7 +85,7 @@ class ProductListInfo(View):
                 'thumbNail'  : product.image_set.filter(product_id=product.id).first().url,
                 'stock'      : product.productsize_set.filter(product_id=product.id).aggregate(Sum('stock'))['stock__sum']
     
-            } for product in Product.objects.filter(q) 
+            } for product in Product.objects.filter(q).order_by('-created_at')
         ]
         return JsonResponse({'productListInfo' : result}, status=200)
 
