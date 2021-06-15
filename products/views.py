@@ -49,21 +49,23 @@ class ProductDetails(View):
         return JsonResponse({'productDetails' : result}, status=200)
 
 class ProductListInfo(View):
-    def get(self, request, details, number):       
-        catch        = request.GET.get('catch', None)
-        color        = request.GET.get('color', None)
-        price_max    = request.GET.get('priceMax', sys.maxsize)
-        price_min    = request.GET.get('priceMin', 0)
+    def get(self, request):       
+        catch       = request.GET.get('catch', None)
+        color       = request.GET.get('color', None)
+        price_max   = request.GET.get('priceMax', sys.maxsize)
+        price_min   = request.GET.get('priceMin', 0)
+        country_id  = request.GET.get('country', None)
+        category_id = request.GET.get('category', None)
 
         q = Q()
 
-        if details == 'country' and number != 0:
-            q.add(Q(country_id=number), q.AND)
-            
-        if details == 'category' and number != 0:
-            pattern_identifier = Category.objects.get(id=number).name
-            q.add(Q(category_id=number), q.AND)
-            q.add(Q(category_id=6, name__istartswith=pattern_identifier), q.OR) 
+        if country_id:
+            q.add(Q(country_id=country_id), q.AND)
+
+        if category_id:
+            pattern_identifier = Category.objects.get(id=category_id).name
+            q.add(Q(category_id=category_id), q.AND)
+            q.add(Q(category_id=6, name__istartswith=pattern_identifier), q.OR)
 
         if catch:
             q.add(Q(catch_code=catch), q.AND)
