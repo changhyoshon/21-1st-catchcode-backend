@@ -61,9 +61,9 @@ class ProductListInfo(View):
             q.add(Q(country_id=number), q.AND)
             
         if details == 'category':
-            a = Category.objects.get(id=number).name
+            pattern_identifier = Category.objects.get(id=number).name
             q.add(Q(category_id=number), q.AND)
-            q.add(Q(category_id=6, name__istartswith=a), q.OR)
+            q.add(Q(category_id=6, name__istartswith=pattern_identifier), q.OR)
 
         if catch:
             q.add(Q(catch_code=catch), q.AND)
