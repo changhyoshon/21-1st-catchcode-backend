@@ -85,7 +85,7 @@ class ProductListInfo(View):
                 'thumbNail'  : product.image_set.filter(product_id=product.id).first().url,
                 'stock'      : product.productsize_set.filter(product_id=product.id).aggregate(Sum('stock'))['stock__sum']
     
-            } for product in Product.objects.filter(q).order_by('-created_at')
+            } for product in Product.objects.filter(q)
         ]
         return JsonResponse({'productListInfo' : result}, status=200)
 
