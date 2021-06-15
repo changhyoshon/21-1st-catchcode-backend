@@ -53,7 +53,7 @@ class OrdersCart(View):
                         'totalPrice'  : object.total_price,
                         'sizeId'      : object.size_id,
                         'sizeName'    : object.size.name,
-                        'stock'       : object.product.productsize_set.filter(size_id = object.size_id)[0].stock,
+                        'stock'       : object.product.productsize_set.filter(size_id = object.size_id).first().stock,
                         'orderItemId' : object.id
                     } for object in order_items
                 ]
@@ -121,18 +121,18 @@ class OrdersCart(View):
         try:
             datas = json.loads(request.body)
 
-            order_item = OrderItem.objects.filter(id = datas['orderItemId']).first()
-            order_id   = -1 if not order_item else order_item.order_id
-            is_deleted = False if not order_item.delete() else True
+            order_item = OrderItem.objects.get(id = datas['orderItemId'])
 
-            if is_deleted:
-                order_item_count = OrderItem.objects.filter(order_id = order_id).count()
+            if order_item.delete():
+                order_item_count = OrderItem.objects.filter(order_id = order_item.order_id).count()
 
                 if not order_item_count:
-                    Order.objects.filter(id = order_id).delete()
+                    Order.objects.filter(id = order_item.order_id).delete()
 
             return JsonResponse({'result' : 'SUCCESS'}, status=204)
         except KeyError:
             return JsonResponse({'result' : 'INVALID KEY'}, status=400)
+        except OrderItem.DoesNotExist:
+            return JsonResponse({'result' : 'INVALID PRODUCT'}, status=400)
         except json.decoder.JSONDecodeError:
             return JsonResponse({'result' : 'EMPTY BODY'}, status=400)
