@@ -91,4 +91,23 @@ class ProductListInfo(View):
         ]
         return JsonResponse({'productListInfo' : result}, status=200)
 
+class ProductList(View):
+    def get(self,request):
+      try:
+        # main 페이지 8개 게시물 뽑아오기
+        result = [
+          {
+            'id'        : object.id,
+            'name'      : object.name,
+            'price'     : object.productsize_set.filter(size_id=3).first().price,
+            'thumbNail' : object.image_set.all().order_by('id').first().url,
+            'catchCode' : object.catch_code,
+            'stock'     : object.productsize_set.aggregate(Sum('stock'))['stock__sum']
+          } for object in Product.objects.all().order_by('-created_at')[:8]
+        ]
+        return JsonResponse({"message":result},status = 200)
+      except KeyError:
+        return JsonResponse({"message":"error"},status = 400)
+
+
             
