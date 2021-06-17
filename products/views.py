@@ -93,8 +93,7 @@ class ProductListInfo(View):
 
 class ProductList(View):
     def get(self,request):
-      try:
-        # main 페이지 8개 게시물 뽑아오기
+        # main 페이지 10개 게시물 뽑아오기
         result = [
           {
             'id'        : object.id,
@@ -103,11 +102,9 @@ class ProductList(View):
             'thumbNail' : object.image_set.all().order_by('id').first().url,
             'catchCode' : object.catch_code,
             'stock'     : object.productsize_set.aggregate(Sum('stock'))['stock__sum']
-          } for object in Product.objects.all().order_by('-created_at')[:8]
+          } for object in Product.objects.all().order_by('-created_at')[:10]
         ]
-        return JsonResponse({"message":result},status = 200)
-      except KeyError:
-        return JsonResponse({"message":"error"},status = 400)
+        return JsonResponse({"productList":result},status = 200)
 
 
             
